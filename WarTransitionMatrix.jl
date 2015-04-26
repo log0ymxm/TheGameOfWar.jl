@@ -33,3 +33,23 @@ P = get_transition_matrix()
 
 # Verify that all rows sum to 1
 @test_approx_eq sum(P,2) ones(Float32, 53, 1)
+
+function augmented_matrix(X)
+    # Note: this function is not general enough for any
+    # stochastic matrix. It assumes the locations of the
+    # absorbing states, and the size of the matrix.
+
+    # Move the absorbing states to top left
+    P = hcat(X[:,1], X[:,53], X[:,2:52])
+    P = vcat(P[1,:], P[53,:], P[2:52,:])
+
+    P_tilde = P[1:2,1:2]
+    S = P[3:53,1:2]
+    Q = P[3:53,3:53]
+    P, P_tilde, S, Q
+end
+
+P_aug, P_tilde, S, Q = augmented_matrix(P)
+
+# Assert \tilde{P} has both absorbing states
+@test_approx_eq P_tilde eye(Float32, 2)
