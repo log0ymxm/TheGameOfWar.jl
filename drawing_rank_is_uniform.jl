@@ -21,3 +21,15 @@ drawing_an_ace_for_all_x = [sample_drawing_an_ace(i) for i = 1:52]
 for i=1:52
     @test_approx_eq_eps drawing_an_ace_for_all_x[i] (1/13) 1e-2
 end
+
+# We can define a function that calculates this exactly since
+# it's based off the hypergeometric distribution.
+function p_c(x)
+    sum([(i/x)*(binomial(x,i)*binomial(52-x,4-i)/binomial(52,4)) for i=0:4])
+end
+
+println(p_c(26))
+
+for x=1:52
+    @test_approx_eq_eps p_c(x) (1/13) 1e-2
+end
