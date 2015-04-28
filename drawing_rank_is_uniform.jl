@@ -1,3 +1,8 @@
+using Base.Test
+using StatsBase
+
+require("War.jl")
+
 function drawing_an_ace(x)
     deck = shuffle!([1:52])
     d1, d2 = deck[1:x], deck[x+1:52]
@@ -6,7 +11,7 @@ function drawing_an_ace(x)
 end
 
 # Assert that drawing any rank from a hand given X_t = 26 is uniform 1/13
-p_drawing_an_ace_sample = [drawing_an_ace(26) for i=1:1000000]
+p_drawing_an_ace_sample = [drawing_an_ace(26) for i=1:100000]
 p_drawing_an_ace = mean(p_drawing_an_ace_sample)
 
 @test_approx_eq_eps p_drawing_an_ace (1/13) 1e-2
@@ -33,3 +38,14 @@ println(p_c(26))
 for x=1:52
     @test_approx_eq_eps p_c(x) (1/13) 1e-2
 end
+
+function draw_from_deck(x)
+    deck = shuffle!([1:52])
+    d1 = deck[1:x]
+    c1 = pop!(d1)
+    rank(c1)
+end
+
+println([draw_from_deck(26) for i = 1:100000])
+
+sample_drawing_an_ace(x) = mean([draw_from_deck(x) for i=1:100000])
