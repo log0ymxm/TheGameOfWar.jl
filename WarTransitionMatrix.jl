@@ -1,3 +1,8 @@
+using Base.Test
+
+p_card_gt = 0.4706251
+p_cards_eq = 0.0587498
+
 function get_transition_matrix()
     P = zeros(Float32, 53, 53)
     for i=1:53
@@ -7,10 +12,10 @@ function get_transition_matrix()
             for t=0:13
                 delta = (4*t + 1)
                 if i+delta <= 53
-                    P[i,i+delta] = (1/13)^t * (6/13)
+                    P[i,i+delta] = p_cards_eq^t * p_card_gt
                 end
                 if i-delta >= 1
-                    P[i,i-delta] = (1/13)^t * (6/13)
+                    P[i,i-delta] = p_cards_eq^t * p_card_gt
                 end
             end
 
